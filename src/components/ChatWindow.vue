@@ -65,7 +65,7 @@ const messages = ref([
     avatar: ""
   },
 ]);
-
+const messageListRef = ref(null);
 const handleSendMessage = (content) => {
   // 添加用户消息
   messages.value.push({
@@ -118,7 +118,7 @@ onMounted(() => {
     <div class="chat-header">
       <div class="header-title">AI 助手</div>
       <div class="header-actions">
-        <el-button size="small" type="text">
+        <el-button size="small" >
           <el-icon><Setting /></el-icon>
         </el-button>
       </div>
@@ -174,7 +174,6 @@ onMounted(() => {
   overflow-y: auto;
   padding: 20px;
   scroll-behavior: smooth;
-  background-image: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(245,247,250,0.8));
 
   &::-webkit-scrollbar {
     width: 6px;

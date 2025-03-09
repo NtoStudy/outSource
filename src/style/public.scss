@@ -1,11 +1,12 @@
 // 全局变量
 :root {
-  --primary-color: #4080ff;
-  --bg-color: #f5f7fa;
-  --text-color: #333;
-  --light-text: #909399;
-  --border-color: #e4e7ed;
-  --hover-color: #f2f6fc;
+  // 修改为您想要的新颜色
+  --primary-color: #3366cc;  // 修改主色调
+  --bg-color: #f9f9f9;       // 修改背景色
+  --text-color: #222222;     // 修改文本颜色
+  --light-text: #888888;     // 修改浅色文本
+  --border-color: #dddddd;   // 修改边框颜色
+  --hover-color: #e6f0ff;    // 修改悬停颜色
 }
 
 // 重置样式
@@ -13,4 +14,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.el-popover{
+  --el-popover-padding: 0; 
 }
