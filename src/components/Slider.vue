@@ -81,8 +81,11 @@ const popoverContent = ref(``);
   flex-direction: column;
   background-color: #f9fbfe;
   position: fixed;
+  left: 0;
+  top: 0;
   width: 60px;
   height: 100vh;
+  z-index: 1000;
 
   .slider-logo {
     display: flex;

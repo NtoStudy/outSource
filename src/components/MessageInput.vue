@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import {ref} from 'vue';
 
 const inputContent = ref('');
 const emit = defineEmits(['send-message']);
@@ -44,7 +44,9 @@ const handleKeydown = (e) => {
           <div class="action-button">
             <el-tooltip content="表情" placement="top">
               <div class="custom-button">
-                <el-icon><ChatDotRound /></el-icon>
+                <el-icon>
+                  <ChatDotRound/>
+                </el-icon>
                 <span class="button-text">深度思考(R1)</span>
               </div>
             </el-tooltip>
@@ -53,7 +55,9 @@ const handleKeydown = (e) => {
           <div class="action-button">
             <el-tooltip content="网络搜索" placement="top">
               <div class="custom-button">
-                <el-icon><Search /></el-icon>
+                <el-icon>
+                  <Search/>
+                </el-icon>
                 <span class="button-text">联网搜索</span>
               </div>
             </el-tooltip>
@@ -63,19 +67,25 @@ const handleKeydown = (e) => {
         <div class="right-actions">
           <el-tooltip content="发送" placement="top">
             <el-button circle class="send-button">
-              <el-icon><Position /></el-icon>
+              <el-icon>
+                <Position/>
+              </el-icon>
             </el-button>
           </el-tooltip>
 
           <el-tooltip content="附件" placement="top">
             <el-button circle class="attachment-button">
-              <el-icon><Paperclip /></el-icon>
+              <el-icon>
+                <Paperclip/>
+              </el-icon>
             </el-button>
           </el-tooltip>
 
           <el-tooltip content="更多" placement="top">
             <el-button circle class="more-button">
-              <el-icon><MoreFilled /></el-icon>
+              <el-icon>
+                <MoreFilled/>
+              </el-icon>
             </el-button>
           </el-tooltip>
         </div>
@@ -86,6 +96,7 @@ const handleKeydown = (e) => {
 
 <style scoped lang="scss">
 @use "sass:color";
+
 .input-container {
   display: flex;
   justify-content: center;
