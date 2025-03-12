@@ -1,14 +1,61 @@
 <script setup>
 import { ref } from "vue";
+import SettingsDialog from '../dialogs/SettingDialogs.vue';
+import FeedbackDialog from '../dialogs/FeedbackDialog.vue';
+import HistoryList from './HistoryList.vue';
+import UserMenu from './UserMenu.vue';
 
 // 控制弹出框的变量
 const popoverVisible = ref(false);
 // 控制侧边栏展开状态
 const sidebarExpanded = ref(false);
+// 控制系统设置对话框显示
+const settingsDialogVisible = ref(false);
+// 语言选项
+const languageOption = ref("跟随系统");
+// 主题选项
+const themeOption = ref("深色");
+// 控制用户反馈对话框显示
+const feedbackDialogVisible = ref(false);
 
 // 切换侧边栏展开状态
 const toggleSidebar = () => {
   sidebarExpanded.value = !sidebarExpanded.value;
+};
+
+// 打开系统设置对话框
+const openSettingsDialog = () => {
+  settingsDialogVisible.value = true;
+  popoverVisible.value = false; // 关闭用户菜单
+};
+
+// 打开用户反馈对话框
+const openFeedbackDialog = () => {
+  feedbackDialogVisible.value = true;
+  popoverVisible.value = false; // 关闭用户菜单
+};
+
+// 处理用户菜单事件
+const handleUserMenuAction = (action) => {
+  popoverVisible.value = false;
+
+  if (action === 'settings') {
+    openSettingsDialog();
+  } else if (action === 'feedback') {
+    openFeedbackDialog();
+  } else if (action === 'logout') {
+    // 处理退出登录
+    console.log('退出登录');
+  } else if (action === 'delete-all') {
+    // 处理删除所有对话
+    console.log('删除所有对话');
+  }
+};
+
+// 处理反馈提交
+const handleFeedbackSubmit = (feedback) => {
+  console.log('提交反馈:', feedback);
+  // 这里可以添加提交反馈的逻辑
 };
 
 // 模拟历史记录数据
@@ -79,7 +126,7 @@ const historyItems = [
 
       <!-- 底部图标 -->
       <div class="bottom-items">
-        <div class="sidebar-item">
+        <div class="sidebar-item" @click="openSettingsDialog">
           <el-icon><Setting /></el-icon>
         </div>
 
@@ -96,33 +143,11 @@ const historyItems = [
             </div>
           </template>
 
-          <!-- 弹出菜单内容 -->
-          <div class="popover-content">
-            <div class="menu-item">
-              <el-icon><Iphone /></el-icon>
-              <span>195****3747</span>
-            </div>
-
-            <div class="menu-item">
-              <el-icon><Setting /></el-icon>
-              <span>系统设置</span>
-            </div>
-
-            <div class="menu-item">
-              <el-icon><Delete /></el-icon>
-              <span>删除所有对话</span>
-            </div>
-
-            <div class="menu-item">
-              <el-icon><Message /></el-icon>
-              <span>联系我们</span>
-            </div>
-
-            <div class="menu-item">
-              <el-icon><SwitchButton /></el-icon>
-              <span>退出登录</span>
-            </div>
-          </div>
+          <!-- 使用用户菜单组件 -->
+          <UserMenu @settings="handleUserMenuAction('settings')"
+                   @feedback="handleUserMenuAction('feedback')"
+                   @logout="handleUserMenuAction('logout')"
+                   @delete-all="handleUserMenuAction('delete-all')" />
         </el-popover>
       </div>
     </template>
@@ -142,19 +167,8 @@ const historyItems = [
         <span>开启新对话</span>
       </div>
 
-      <!-- 历史记录列表 -->
-      <div class="history-container">
-        <div
-          v-for="group in historyItems"
-          :key="group.id"
-          class="history-group"
-        >
-          <div class="history-group-title">{{ group.title }}</div>
-          <div v-for="item in group.items" :key="item.id" class="history-item">
-            <span>{{ item.content }}</span>
-          </div>
-        </div>
-      </div>
+      <!-- 使用历史记录列表组件 -->
+      <HistoryList :history-items="historyItems" />
 
       <el-popover
         placement="top"
@@ -169,36 +183,27 @@ const historyItems = [
           </div>
         </template>
 
-        <!-- 弹出菜单内容 -->
-        <div class="popover-content">
-          <div class="menu-item">
-            <el-icon><Iphone /></el-icon>
-            <span>195****3747</span>
-          </div>
-
-          <div class="menu-item">
-            <el-icon><Setting /></el-icon>
-            <span>系统设置</span>
-          </div>
-
-          <div class="menu-item">
-            <el-icon><Delete /></el-icon>
-            <span>删除所有对话</span>
-          </div>
-
-          <div class="menu-item">
-            <el-icon><Message /></el-icon>
-            <span>联系我们</span>
-          </div>
-
-          <div class="menu-item">
-            <el-icon><SwitchButton /></el-icon>
-            <span>退出登录</span>
-          </div>
-        </div>
+        <!-- 使用用户菜单组件 -->
+        <UserMenu @settings="handleUserMenuAction('settings')"
+                 @feedback="handleUserMenuAction('feedback')"
+                 @logout="handleUserMenuAction('logout')"
+                 @delete-all="handleUserMenuAction('delete-all')" />
       </el-popover>
     </template>
   </div>
+
+  <!-- 使用设置对话框组件 -->
+  <SettingsDialog
+    v-model:visible="settingsDialogVisible"
+    v-model:language-option="languageOption"
+    v-model:theme-option="themeOption"
+  />
+
+  <!-- 使用反馈对话框组件 -->
+  <FeedbackDialog
+    v-model:visible="feedbackDialogVisible"
+    @submit="handleFeedbackSubmit"
+  />
 </template>
 
 <style scoped lang="scss">
@@ -317,66 +322,6 @@ const historyItems = [
     }
   }
 
-  .history-container {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0 16px;
-
-    .history-group {
-      margin-bottom: 20px;
-
-      .history-group-title {
-        font-size: 14px;
-        color: #666;
-        margin-bottom: 8px;
-        padding-left: 4px;
-      }
-
-      .history-item {
-        padding: 10px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-        margin-bottom: 4px;
-        font-size: 14px;
-        color: #333;
-
-        &:hover {
-          background-color: #f0f0f0;
-        }
-      }
-    }
-  }
-
-  .download-app {
-    margin: 16px;
-    padding: 12px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-
-    .el-icon {
-      margin-right: 8px;
-      font-size: 18px;
-      color: #666;
-    }
-
-    span {
-      font-size: 14px;
-      color: #333;
-    }
-
-    .new-tag {
-      margin-left: auto;
-      background-color: #4080ff;
-      color: white;
-      font-size: 12px;
-      padding: 2px 6px;
-      border-radius: 10px;
-    }
-  }
-
   .user-info {
     display: flex;
     align-items: center;
@@ -389,31 +334,6 @@ const historyItems = [
       border-radius: 50%;
       background-color: #ddd;
       margin-right: 12px;
-    }
-
-    span {
-      font-size: 14px;
-      color: #333;
-    }
-  }
-}
-
-.popover-content {
-  .menu-item {
-    display: flex;
-    align-items: center;
-    padding: 10px 15px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-
-    &:hover {
-      background-color: #f5f5f5;
-    }
-
-    .el-icon {
-      margin-right: 10px;
-      font-size: 18px;
-      color: #666;
     }
 
     span {

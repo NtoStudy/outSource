@@ -1,6 +1,6 @@
 <script setup>
-import SideBar from "@/components/SideBar.vue";
-import ChatWindow from "@/components/ChatWindow.vue";
+import SideBar from "@/components/sidebar/index.vue";
+import ChatWindow from "@/components/chat/ChatWindow.vue";
 </script>
 
 <template>
