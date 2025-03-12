@@ -14,7 +14,7 @@ const settingsDialogVisible = ref(false);
 // 语言选项
 const languageOption = ref("跟随系统");
 // 主题选项
-const themeOption = ref("深色");
+const themeOption = ref("浅色");
 // 控制用户反馈对话框显示
 const feedbackDialogVisible = ref(false);
 

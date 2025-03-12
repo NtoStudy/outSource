@@ -1,12 +1,19 @@
 // 全局变量
 :root {
-  // 修改为您想要的新颜色
-  --primary-color: #3366cc;  // 修改主色调
-  --bg-color: #f9f9f9;       // 修改背景色
-  --text-color: #222222;     // 修改文本颜色
-  --light-text: #888888;     // 修改浅色文本
-  --border-color: #dddddd;   // 修改边框颜色
-  --hover-color: #e6f0ff;    // 修改悬停颜色
+  // 默认变量（深色主题）
+  --primary-color: #3366cc;
+  --bg-color: #f9f9f9;
+  --text-color: #222222;
+  --light-text: #888888;
+  --border-color: #dddddd;
+  --hover-color: #e6f0ff;
+}
+
+// 添加一些主题相关的全局样式
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
 }
 
 // 重置样式
