@@ -1,10 +1,12 @@
 <script setup>
-import { ref } from "vue";
+import {ref} from "vue";
 import SettingsDialog from '../dialogs/SettingDialogs.vue';
 import FeedbackDialog from '../dialogs/FeedbackDialog.vue';
 import HistoryList from './HistoryList.vue';
 import UserMenu from './UserMenu.vue';
+import {useThemeStore} from "@/store/theme.js";
 
+const themeStore = useThemeStore()
 // 控制弹出框的变量
 const popoverVisible = ref(false);
 // 控制侧边栏展开状态
@@ -14,7 +16,7 @@ const settingsDialogVisible = ref(false);
 // 语言选项
 const languageOption = ref("跟随系统");
 // 主题选项
-const themeOption = ref("浅色");
+const themeOption = ref(themeStore.currentTheme);
 // 控制用户反馈对话框显示
 const feedbackDialogVisible = ref(false);
 
@@ -63,24 +65,35 @@ const historyItems = [
   {
     id: 1,
     title: "昨天",
-    items: [{ id: 101, content: "消除Element Plus popover默认样式" }],
+    items: [{id: 101, content: "消除Element Plus popover默认样式"}],
   },
   {
     id: 2,
     title: "7 天内",
     items: [
-      { id: 201, content: "C语言表达式求值结果分析" },
-      { id: 202, content: "PPT个人介绍页设计指令总结" },
-      { id: 203, content: "新对话" },
-      { id: 204, content: "构建比赛前端页面的专业建议" },
-      { id: 205, content: "Vue组件拆分与父组件代码提供" },
+      {id: 201, content: "C语言表达式求值结果分析"},
+      {id: 202, content: "PPT个人介绍页设计指令总结"},
+      {id: 203, content: "新对话"},
+      {id: 204, content: "构建比赛前端页面的专业建议"},
+      {id: 205, content: "Vue组件拆分与父组件代码提供"},
     ],
   },
   {
     id: 3,
     title: "30 天内",
-    items: [{ id: 301, content: "WebSocket消息发送问题排查与解决方案" }],
+    items: [{id: 301, content: "WebSocket消息发送问题排查与解决方案"}],
   },
+  {
+    id: 4,
+    title: "30 天内",
+    items: [{id: 301, content: "WebSocket消息发送问题排查与解决方案"}],
+  },
+  {
+    id: 5,
+    title: "30 天内",
+    items: [{id: 301, content: "WebSocket消息发送问题排查与解决方案"}],
+  },
+
 ];
 </script>
 
@@ -91,35 +104,41 @@ const historyItems = [
       <!-- 顶部鲸鱼图标 -->
       <div class="logo-container">
         <div class="logo">
-          <el-icon color="#4080ff" :size="28"><Ship /></el-icon>
+          <el-icon color="#4080ff" :size="28">
+            <Ship/>
+          </el-icon>
         </div>
       </div>
 
       <!-- 中间导航图标 -->
       <div class="nav-items">
         <el-tooltip
-          class="box-item"
-          effect="dark"
-          content="打开侧边栏"
-          placement="right-start"
+            class="box-item"
+            effect="dark"
+            content="打开侧边栏"
+            placement="right-start"
         >
           <div
-            class="sidebar-item"
-            :class="{ active: sidebarExpanded }"
-            @click="toggleSidebar"
+              class="sidebar-item"
+              :class="{ active: sidebarExpanded }"
+              @click="toggleSidebar"
           >
-            <el-icon><Expand /></el-icon>
+            <el-icon>
+              <Expand/>
+            </el-icon>
           </div>
         </el-tooltip>
 
         <el-tooltip
-          class="box-item"
-          effect="dark"
-          content="开启新对话"
-          placement="right-start"
+            class="box-item"
+            effect="dark"
+            content="开启新对话"
+            placement="right-start"
         >
           <div class="sidebar-item">
-            <el-icon><ChatDotRound /></el-icon>
+            <el-icon>
+              <ChatDotRound/>
+            </el-icon>
           </div>
         </el-tooltip>
       </div>
@@ -127,27 +146,31 @@ const historyItems = [
       <!-- 底部图标 -->
       <div class="bottom-items">
         <div class="sidebar-item" @click="openSettingsDialog">
-          <el-icon><Setting /></el-icon>
+          <el-icon>
+            <Setting/>
+          </el-icon>
         </div>
 
         <!-- 用户图标添加弹出菜单 -->
         <el-popover
-          placement="right"
-          trigger="click"
-          style="width: auto"
-          v-model:visible="popoverVisible"
+            placement="right"
+            trigger="click"
+            style="width: auto"
+            v-model:visible="popoverVisible"
         >
           <template #reference>
             <div class="sidebar-item">
-              <el-icon><User /></el-icon>
+              <el-icon>
+                <User/>
+              </el-icon>
             </div>
           </template>
 
           <!-- 使用用户菜单组件 -->
           <UserMenu @settings="handleUserMenuAction('settings')"
-                   @feedback="handleUserMenuAction('feedback')"
-                   @logout="handleUserMenuAction('logout')"
-                   @delete-all="handleUserMenuAction('delete-all')" />
+                    @feedback="handleUserMenuAction('feedback')"
+                    @logout="handleUserMenuAction('logout')"
+                    @delete-all="handleUserMenuAction('delete-all')"/>
         </el-popover>
       </div>
     </template>
@@ -157,52 +180,56 @@ const historyItems = [
       <div class="expanded-header">
         <h2 class="expanded-title">数学一点通</h2>
         <div class="close-icon" @click="toggleSidebar">
-          <el-icon><Fold /></el-icon>
+          <el-icon>
+            <Fold/>
+          </el-icon>
         </div>
       </div>
 
       <!-- 新建对话按钮 -->
       <div class="new-chat-button">
-        <el-icon><ChatRound /></el-icon>
+        <el-icon>
+          <ChatRound/>
+        </el-icon>
         <span>开启新对话</span>
       </div>
 
       <!-- 使用历史记录列表组件 -->
-      <HistoryList :history-items="historyItems" />
+      <HistoryList :history-items="historyItems"/>
 
       <el-popover
-        placement="top"
-        trigger="click"
-        style="width: auto"
-        v-model:visible="popoverVisible"
+          placement="top"
+          trigger="click"
+          style="width: auto"
+          v-model:visible="popoverVisible"
       >
         <template #reference>
           <div class="user-info">
-            <div class="user-avatar"></div>
+            <img class="user-avatar"></img>
             <span>个人信息</span>
           </div>
         </template>
 
         <!-- 使用用户菜单组件 -->
         <UserMenu @settings="handleUserMenuAction('settings')"
-                 @feedback="handleUserMenuAction('feedback')"
-                 @logout="handleUserMenuAction('logout')"
-                 @delete-all="handleUserMenuAction('delete-all')" />
+                  @feedback="handleUserMenuAction('feedback')"
+                  @logout="handleUserMenuAction('logout')"
+                  @delete-all="handleUserMenuAction('delete-all')"/>
       </el-popover>
     </template>
   </div>
 
   <!-- 使用设置对话框组件 -->
   <SettingsDialog
-    v-model:visible="settingsDialogVisible"
-    v-model:language-option="languageOption"
-    v-model:theme-option="themeOption"
+      v-model:visible="settingsDialogVisible"
+      v-model:language-option="languageOption"
+      v-model:theme-option="themeOption"
   />
 
   <!-- 使用反馈对话框组件 -->
   <FeedbackDialog
-    v-model:visible="feedbackDialogVisible"
-    @submit="handleFeedbackSubmit"
+      v-model:visible="feedbackDialogVisible"
+      @submit="handleFeedbackSubmit"
   />
 </template>
 
@@ -210,7 +237,7 @@ const historyItems = [
 .sidebar {
   width: 60px;
   height: 100vh;
-  background-color: #fff;
+  background-color: var(--bg-tertiary);
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
@@ -222,12 +249,13 @@ const historyItems = [
   &.expanded {
     width: 260px;
     align-items: stretch;
-    background-color: #f9fafb;
+    background-color: var(--bg-secondary); // 修改
     padding: 0;
   }
 
   .logo-container {
     margin-bottom: 30px;
+
     .logo {
       width: 40px;
       height: 40px;
@@ -275,23 +303,23 @@ const historyItems = [
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-light);
 
     .expanded-title {
       font-size: 24px;
       font-weight: 600;
-      color: #333;
+      color: var(--text-primary);
     }
 
     .close-icon {
       cursor: pointer;
       font-size: 20px;
-      color: #666;
+      color: var(--text-secondary);
       padding: 8px;
       border-radius: 4px;
 
       &:hover {
-        background-color: #eee;
+        background-color: var(--hover-bg);
       }
     }
   }
@@ -299,8 +327,8 @@ const historyItems = [
   .new-chat-button {
     margin: 16px;
     padding: 10px 16px;
-    background-color: #e6efff;
-    color: #4080ff;
+    background-color: var(--highlight-bg);
+    color: var(--highlight-color);
     border-radius: 20px;
     display: flex;
     align-items: center;
@@ -309,7 +337,7 @@ const historyItems = [
     transition: background-color 0.2s;
 
     &:hover {
-      background-color: #d9e6ff;
+      background-color: var(--highlight-hover);
     }
 
     .el-icon {
@@ -326,19 +354,19 @@ const historyItems = [
     display: flex;
     align-items: center;
     padding: 16px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--border-light);
 
     .user-avatar {
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background-color: #ddd;
+      background-color: var(--bg-secondary);
       margin-right: 12px;
     }
 
     span {
       font-size: 14px;
-      color: #333;
+      color: var(--text-primary);
     }
   }
 }

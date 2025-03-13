@@ -1,5 +1,8 @@
 <script setup>
 import { ref, defineProps, defineEmits } from 'vue';
+import { useThemeStore } from '@/store/theme'
+
+const themeStore = useThemeStore()
 
 const props = defineProps({
   visible: {
@@ -12,7 +15,7 @@ const props = defineProps({
   },
   themeOption: {
     type: String,
-    default: '浅色'
+    default: ''
   }
 });
 
@@ -33,8 +36,9 @@ const updateLanguage = (value) => {
 
 // 更新主题选项
 const updateTheme = (value) => {
-  emit('update:themeOption', value);
-};
+  emit('update:themeOption', value)
+  themeStore.setTheme(value)
+}
 </script>
 
 <template>
@@ -114,7 +118,7 @@ const updateTheme = (value) => {
   :deep(.el-dialog__header) {
     margin: 0;
     padding: 20px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-light);
   }
 
   :deep(.el-dialog__body) {
@@ -133,25 +137,25 @@ const updateTheme = (value) => {
 
 .settings-tabs {
   width: 120px;
-  background-color: #f5f5f5;
+  background-color: var(--bg-color);
   height: 100%;
-  border-right: 1px solid #eee;
+  border-right: 1px solid var(--border-light); 
 }
 
 .settings-tab {
   padding: 15px;
   cursor: pointer;
   font-size: 14px;
-  color: #333;
+  color: var(--text-color);
   
   &.active {
-    background-color: #fff;
+    background-color: var(--bg-tertiary);  // 修改
     color: var(--primary-color);
     font-weight: 500;
   }
   
   &:hover:not(.active) {
-    background-color: #eee;
+    background-color: var(--hover-bg); 
   }
 }
 
@@ -175,7 +179,7 @@ const updateTheme = (value) => {
 
 .settings-label {
   font-size: 14px;
-  color: #333;
+  color: var(--text-primary); 
 }
 
 .settings-select {
@@ -192,16 +196,16 @@ const updateTheme = (value) => {
   display: flex;
   justify-content: space-between;
   padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-light);  // 修改
 }
 
 .account-label {
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary); 
 }
 
 .account-value {
   font-size: 14px;
-  color: #333;
+  color: var(--text-color);
 }
 </style>

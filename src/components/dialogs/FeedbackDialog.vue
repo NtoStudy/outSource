@@ -1,28 +1,28 @@
 <script setup>
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits } from "vue";
 
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
-const emit = defineEmits(['update:visible', 'submit']);
+const emit = defineEmits(["update:visible", "submit"]);
 
 // 用户反馈评分
 const feedbackRating = ref(5);
 // 反馈内容
-const feedbackContent = ref('');
+const feedbackContent = ref("");
 
 // 提交反馈
 const submitFeedback = () => {
-  emit('submit', {
+  emit("submit", {
     rating: feedbackRating.value,
-    content: feedbackContent.value
+    content: feedbackContent.value,
   });
-  feedbackContent.value = '';
-  emit('update:visible', false);
+  feedbackContent.value = "";
+  emit("update:visible", false);
 };
 </script>
 
@@ -76,7 +76,7 @@ const submitFeedback = () => {
   :deep(.el-dialog__header) {
     margin: 0;
     padding: 20px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-light);
   }
 
   :deep(.el-dialog__body) {
@@ -85,7 +85,7 @@ const submitFeedback = () => {
 
   :deep(.el-dialog__footer) {
     padding: 20px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--border-light);
   }
 }
 
@@ -98,7 +98,7 @@ const submitFeedback = () => {
 
 .feedback-title {
   font-size: 16px;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 30px;
   text-align: center;
 }
@@ -118,7 +118,7 @@ const submitFeedback = () => {
 
   :deep(.el-rate__text) {
     font-size: 14px;
-    color: #666;
+    color: var(--text-secondary);
     margin-left: 10px;
   }
 }
@@ -128,7 +128,7 @@ const submitFeedback = () => {
 
   .feedback-tip {
     font-size: 14px;
-    color: #666;
+    color: var(--text-secondary);
     margin-bottom: 12px;
   }
 }

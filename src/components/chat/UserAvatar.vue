@@ -32,13 +32,13 @@ const props = defineProps({
   justify-content: center;
 
   &.ai-avatar {
-    background-color: #e6f7ff;
+    background-color: var(--bg-secondary);
     color: var(--primary-color);
   }
 
   &.user-avatar {
-    background-color: #f0f2f5;
-    color: #909399;
+    background-color: var(--bg-secondary);  
+    color: var(--text-secondary)
   }
 
   img {

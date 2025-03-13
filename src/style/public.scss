@@ -1,19 +1,47 @@
 // 全局变量
 :root {
-  // 默认变量（深色主题）
-  --primary-color: #3366cc;
-  --bg-color: #f9f9f9;
-  --text-color: #222222;
-  --light-text: #888888;
-  --border-color: #dddddd;
-  --hover-color: #e6f0ff;
+  // 浅色主题变量
+  --primary-color: #3366cc;    // 主题色，用于按钮、链接等重要元素
+  --bg-color: #f9f9f9;        // 页面主背景色
+  --text-color: #222222;      // 主要文本颜色
+  --light-text: #888888;      // 次要文本颜色，用于提示、说明等
+  --border-color: #dddddd;    // 主要边框颜色
+  --hover-color: #e6f0ff;     // 鼠标悬停状态的背景色
+  --bg-secondary: #f5f5f5;    // 次要背景色，用于区分不同区域
+  --bg-tertiary: #fff;        // 第三级背景色，用于卡片、弹窗等
+  --text-primary: #333333;    // 主要文本颜色，用于标题和重要文本
+  --text-secondary: #666666;  // 次要文本颜色，用于描述性文本
+  --border-light: #eeeeee;    // 浅色边框，用于分隔线
+  --hover-bg: #f0f0f0;        // 通用悬停背景色，用于菜单项等
+  --highlight-bg: #e6efff;    // 高亮背景色，用于强调区域
+  --highlight-color: #4080ff; // 高亮文本颜色，用于特别强调
+  --highlight-hover: #d9e6ff; // 高亮元素悬停状态
+}
+
+// 深色主题变量
+body.theme-dark {
+  --primary-color: #4080ff;    // 深色主题主色调
+  --bg-color: #1a1a1a;        // 深色主题背景色
+  --text-color: #e0e0e0;      // 深色主题文本色
+  --light-text: #a0a0a0;      // 深色主题次要文本色
+  --border-color: #444444;    // 深色主题边框色
+  --hover-color: #2a3a5a;     // 深色主题悬停色
+  --bg-secondary: #2a2a2a;    // 深色主题次要背景
+  --bg-tertiary: #333333;     // 深色主题第三级背景
+  --text-primary: #e0e0e0;    // 深色主题主要文本
+  --text-secondary: #a0a0a0;  // 深色主题次要文本
+  --border-light: #444444;    // 深色主题浅色边框
+  --hover-bg: #3a3a3a;        // 深色主题通用悬停背景
+  --highlight-bg: #2a3a5a;    // 深色主题高亮背景
+  --highlight-color: #4080ff; // 深色主题高亮文本
+  --highlight-hover: #1a2a4a; // 深色主题高亮悬停
 }
 
 // 添加一些主题相关的全局样式
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s, color 0.3s; // 添加过渡效果
 }
 
 // 重置样式
@@ -23,6 +51,9 @@ body {
   box-sizing: border-box;
 }
 
+// 覆盖 Element Plus 的 popover 默认内边距
 .el-popover{
-  --el-popover-padding: 0; 
+  --el-popover-padding: 0;
 }
+
+

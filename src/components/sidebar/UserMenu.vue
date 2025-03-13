@@ -42,6 +42,7 @@ const emit = defineEmits(['update:visible', 'settings', 'feedback', 'logout', 'd
 
 <style scoped lang="scss">
 .popover-content {
+  background-color: var(--bg-color);
   .menu-item {
     display: flex;
     align-items: center;
@@ -50,18 +51,18 @@ const emit = defineEmits(['update:visible', 'settings', 'feedback', 'logout', 'd
     transition: background-color 0.2s;
 
     &:hover {
-      background-color: #f5f5f5;
-    }
+    background-color: var(--hover-bg);
+  }
 
     .el-icon {
       margin-right: 10px;
       font-size: 18px;
-      color: #666;
+      color: var(--text-secondary);
     }
 
     span {
       font-size: 14px;
-      color: #333;
+      color: var(--text-primary);
     }
   }
 }

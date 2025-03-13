@@ -143,7 +143,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color:#f9f9f9;
+  background-color: var(--bg-color);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
@@ -154,13 +154,13 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  background-color: #f9f9f9;
-  border-bottom: 1px solid #eaeaea;
+  background-color: var(--bg-color); 
+  border-bottom: 1px solid var(--border-light);
 
   .header-title {
     font-size: 16px;
     font-weight: 600;
-    color: #333;
+    color: var(--text-primary); 
   }
 
   .header-actions {
@@ -184,7 +184,7 @@ onMounted(() => {
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: var(--border-light); 
     border-radius: 3px;
   }
 

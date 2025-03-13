@@ -55,8 +55,7 @@ const formatDate = (dateString) => {
     }
 
     .message-content {
-      background-color: var(--primary-color);
-      color: white;
+      background-color: var(--bg-secondary);
       margin-left: auto;
     }
   }
@@ -64,7 +63,7 @@ const formatDate = (dateString) => {
   // AI消息样式
   &.ai-message {
     .message-content {
-      background-color: #f5f7fa;
+      background-color: var(--bg-secondary); 
     }
   }
 }
@@ -77,12 +76,6 @@ const formatDate = (dateString) => {
   max-width: 60%;
 }
 
-// 时间显示
-.message-time {
-  font-size: 12px;
-  color: var(--light-text);
-  margin-bottom: 5px;
-}
 
 // 消息内容
 .message-content {

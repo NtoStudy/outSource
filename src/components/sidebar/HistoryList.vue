@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps } from 'vue';
+import {defineProps} from 'vue';
 
 const props = defineProps({
   historyItems: {
@@ -12,9 +12,9 @@ const props = defineProps({
 <template>
   <div class="history-container">
     <div
-      v-for="group in historyItems"
-      :key="group.id"
-      class="history-group"
+        v-for="group in historyItems"
+        :key="group.id"
+        class="history-group"
     >
       <div class="history-group-title">{{ group.title }}</div>
       <div v-for="item in group.items" :key="item.id" class="history-item">
@@ -30,12 +30,26 @@ const props = defineProps({
   overflow-y: auto;
   padding: 0 16px;
 
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--border-light);
+    border-radius: 3px;
+  }
+
   .history-group {
     margin-bottom: 20px;
 
+
     .history-group-title {
       font-size: 14px;
-      color: #666;
+      color: var(--text-secondary);
       margin-bottom: 8px;
       padding-left: 4px;
     }
@@ -46,10 +60,10 @@ const props = defineProps({
       cursor: pointer;
       margin-bottom: 4px;
       font-size: 14px;
-      color: #333;
+      color: var(--text-primary);
 
       &:hover {
-        background-color: #f0f0f0;
+        background-color: var(--border-color);
       }
     }
   }

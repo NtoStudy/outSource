@@ -31,7 +31,7 @@ const handleKeydown = (e) => {
           @keydown="handleKeydown"
           placeholder="有问题，尽管问，shift+enter发送"
         ></div>
-        
+
         <div class="input-actions">
           <el-tooltip content="附件" placement="top">
             <el-button circle class="attachment-button">
@@ -76,9 +76,9 @@ const handleKeydown = (e) => {
   display: flex;
   align-items: center;
   width: 100%;
-  background-color: #fff;
+  background-color: var(--bg-tertiary); 
   border-radius: 18px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--border-light); 
   padding: 8px 16px;
 }
 
@@ -93,7 +93,7 @@ const handleKeydown = (e) => {
   overflow-y: auto;
   font-size: 14px;
   line-height: 1.6;
-  color: #333;
+  color: var(--text-primary);
 
   &:focus {
     outline: none;
@@ -101,7 +101,8 @@ const handleKeydown = (e) => {
 
   &:empty:before {
     content: attr(placeholder);
-    color: #999;
+    &:empty:before {
+      color: var(--text-secondary);
     font-style: italic;
   }
 }
@@ -112,34 +113,34 @@ const handleKeydown = (e) => {
   display: flex;
   gap: 8px;
   align-items: center;
-  
+
   .send-button {
     background-color: var(--primary-color);
-    color: white;
+    color: var(--text-secondary);
     border: none;
     width: 32px;
     height: 32px;
-    
+  }
     &:hover {
       background-color: color.adjust(#4080ff, $lightness: -5%);
     }
-    
+
     .el-icon {
       font-size: 16px;
     }
   }
-  
+
   .attachment-button {
     background-color: transparent;
     border: none;
-    color: #666;
+    color: var(--text-secondary);
     width: 32px;
     height: 32px;
-    
+
     &:hover {
-      background-color: #f0f0f0;
+        background-color: var(--hover-bg);
     }
-    
+
     .el-icon {
       font-size: 16px;
     }
