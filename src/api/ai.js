@@ -2,15 +2,13 @@ import instance from "@/api/index.js";
 
 /**
  * 新增数学聊天API
- * @param {string} sessionId - 会话ID
  * @param {string} message - 用户发送的消息
  * @returns {Promise} - 包含服务器响应的Promise对象
  */
-export const newMathChatApi = (sessionId, message) => instance({
+export const newMathChatApi = (message= "你好呀") => instance({
   url: '/math/chat',
   method: 'post',
   params: {
-    sessionId,
     message
   }
 })

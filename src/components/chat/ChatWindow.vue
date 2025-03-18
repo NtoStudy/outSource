@@ -5,65 +5,11 @@ import MessageInput from './MessageInput.vue';
 // 模拟消息数据
 const messages = ref([
   {
-    id: 1,
-    content: "你好，请问您的问题是什么？",
+    content: "你好！有什么数学问题需要我帮忙解答吗？",
     sender: "ai",
     avatar: ""
   },
-  {
-    id: 2,
-    content: "我是Kimi，你的AI智能助手。",
-    sender: "ai",
-    avatar: ""
-  },
-  {
-    id: 3,
-    content: "你是谁",
-    sender: "user",
-    avatar: ""
-  },
-  {
-    id: 4,
-    content: "2023年10月19日",
-    sender: "ai",
-    avatar: ""
-  },
-  {
-    id: 5,
-    content: "我是Kimi，你的AI智能助手。",
-    sender: "ai",
-    avatar: ""
-  },
-  {
-    id: 6,
-    content: "你是谁",
-    sender: "user",
-    avatar: ""
-  },
-  {
-    id: 7,
-    content: "2023年10月19日",
-    sender: "ai",
-    avatar: ""
-  },
-  {
-    id: 8,
-    content: "我是Kimi，你的AI智能助手。",
-    sender: "ai",
-    avatar: ""
-  },
-  {
-    id: 9,
-    content: "你是谁",
-    sender: "user",
-    avatar: ""
-  },
-  {
-    id: 10,
-    content: "2023年10月19日",
-    sender: "ai",
-    avatar: ""
-  },
+
 ]);
 const messageListRef = ref(null);
 const handleSendMessage = (content) => {
@@ -127,8 +73,8 @@ onMounted(() => {
     <div class="message-list" ref="messageListRef">
       <div class="message-list-container">
         <MessageItem
-            v-for="message in messages"
-            :key="message.id"
+            v-for="(message,index) in messages"
+            :key="index"
             :message="message"
         />
       </div>
@@ -154,13 +100,13 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  background-color: var(--bg-color); 
+  background-color: var(--bg-color);
   border-bottom: 1px solid var(--border-light);
 
   .header-title {
     font-size: 16px;
     font-weight: 600;
-    color: var(--text-primary); 
+    color: var(--text-primary);
   }
 
   .header-actions {
@@ -184,7 +130,7 @@ onMounted(() => {
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: var(--border-light); 
+    background-color: var(--border-light);
     border-radius: 3px;
   }
 

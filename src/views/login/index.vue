@@ -19,13 +19,16 @@ const handleLogin = async (loginForm) => {
     // 这里添加登录接口调用
     const res = await loginApi(loginForm);
     if(res.data.code === 1){
+      // 确保这里正确保存了 token
       userInfoStore.setToken(res.data.data)
+      console.log('保存的token:', res.data.data) // 添加日志确认 token 值
       await router.push('/');
+    } else {
+      ElMessage.error(res.data.msg || '登录失败')
     }
-
-
   } catch (error) {
     console.error('登录失败:', error);
+    ElMessage.error('登录失败，请稍后重试')
   }
 };
 

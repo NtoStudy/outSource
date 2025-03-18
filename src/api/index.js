@@ -1,19 +1,20 @@
 import axios from 'axios'
 import {useUserInfoStore} from '@/store/user.js'
 
-const token = useUserInfoStore()?.token
 
 const instance = axios.create({
   baseURL: 'http://192.168.43.174:8080',
-  timeout: 10000,
-  headers: {
-    token: token || '',
-  },
+  timeout: 30000,
+
 })
 
 // 添加请求拦截器
 instance.interceptors.request.use(
   function (config) {
+    const userStore = useUserInfoStore()
+    if (userStore?.token) {
+      config.headers.token = userStore.token
+    }
     return config
   },
   function (error) {

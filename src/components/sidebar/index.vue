@@ -1,10 +1,12 @@
 <script setup>
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import SettingsDialog from '../dialogs/SettingDialogs.vue';
 import FeedbackDialog from '../dialogs/FeedbackDialog.vue';
 import HistoryList from './HistoryList.vue';
 import UserMenu from './UserMenu.vue';
 import {useThemeStore} from "@/store/theme.js";
+import {mathListApi, newMathChatApi} from "@/api/ai.js";
+import router from "@/router/index.js";
 
 const themeStore = useThemeStore()
 // 控制弹出框的变量
@@ -61,40 +63,26 @@ const handleFeedbackSubmit = (feedback) => {
 };
 
 // 模拟历史记录数据
-const historyItems = [
-  {
-    id: 1,
-    title: "昨天",
-    items: [{id: 101, content: "消除Element Plus popover默认样式"}],
-  },
-  {
-    id: 2,
-    title: "7 天内",
-    items: [
-      {id: 201, content: "C语言表达式求值结果分析"},
-      {id: 202, content: "PPT个人介绍页设计指令总结"},
-      {id: 203, content: "新对话"},
-      {id: 204, content: "构建比赛前端页面的专业建议"},
-      {id: 205, content: "Vue组件拆分与父组件代码提供"},
-    ],
-  },
-  {
-    id: 3,
-    title: "30 天内",
-    items: [{id: 301, content: "WebSocket消息发送问题排查与解决方案"}],
-  },
-  {
-    id: 4,
-    title: "30 天内",
-    items: [{id: 301, content: "WebSocket消息发送问题排查与解决方案"}],
-  },
-  {
-    id: 5,
-    title: "30 天内",
-    items: [{id: 301, content: "WebSocket消息发送问题排查与解决方案"}],
-  },
+const historyItems = ref([])
 
-];
+const mathList = async ()=>{
+  const res =  await mathListApi()
+  if(res.data.code === 1){
+    historyItems.value = res.data.data
+  }
+}
+
+
+const handleNewChat = async ()=>{
+  await router.push('/home/empty');
+  if (sidebarExpanded.value) {
+    toggleSidebar();
+  }
+}
+onMounted(()=>{
+  mathList()
+})
+
 </script>
 
 <template>
@@ -135,7 +123,7 @@ const historyItems = [
             content="开启新对话"
             placement="right-start"
         >
-          <div class="sidebar-item">
+          <div class="sidebar-item" @click="handleNewChat">
             <el-icon>
               <ChatDotRound/>
             </el-icon>
@@ -187,7 +175,7 @@ const historyItems = [
       </div>
 
       <!-- 新建对话按钮 -->
-      <div class="new-chat-button">
+      <div class="new-chat-button" @click="handleNewChat">
         <el-icon>
           <ChatRound/>
         </el-icon>

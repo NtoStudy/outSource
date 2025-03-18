@@ -17,5 +17,9 @@ export const useUserInfoStore = defineStore('user', () => {
     clearToken
   }
 }, {
-  persist: true,
+  persist: {
+    key: 'user-store',
+    storage: localStorage,
+    paths: ['token']
+  }
 })

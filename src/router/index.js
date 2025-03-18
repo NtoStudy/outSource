@@ -5,7 +5,13 @@ import LoginView from '@/views/login/index.vue'
 const routes = [
   {
     path: '/',
-    component: Home
+    redirect: '/home/empty',
+  },
+  {
+    path: '/home/:id',
+    name: 'Home',
+    component: Home,
+    props: true
   },
   {
     path: '/login',

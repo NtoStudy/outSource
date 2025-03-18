@@ -1,5 +1,6 @@
 <script setup>
 import {defineProps} from 'vue';
+import {mathMessageApi} from "@/api/ai.js";
 
 const props = defineProps({
   historyItems: {
@@ -7,18 +8,23 @@ const props = defineProps({
     default: () => []
   }
 });
+console.log(props.historyItems)
+
+const handleChatItem = async (sessionId) => {
+  const res = await mathMessageApi(sessionId)
+  console.log(res.data)
+}
 </script>
 
 <template>
   <div class="history-container">
     <div
-        v-for="group in historyItems"
-        :key="group.id"
+        v-for="(group,index) in historyItems"
+        :key="index"
         class="history-group"
     >
-      <div class="history-group-title">{{ group.title }}</div>
-      <div v-for="item in group.items" :key="item.id" class="history-item">
-        <span>{{ item.content }}</span>
+      <div class="history-item" @click="handleChatItem(group)">
+        <span>{{ group.length > 15 ? group.slice(0, 15) + '...' : group }}</span>
       </div>
     </div>
   </div>
