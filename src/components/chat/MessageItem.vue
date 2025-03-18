@@ -10,7 +10,7 @@ const props = defineProps({
     // {
     //   id: Number,
     //   content: String,
-    //   sender: String, // 'ai' 或 'user'
+    //   sender: String, // 'ai' 或 'login.js'
     //   timestamp: String,
     //   avatar: String,
     // }
@@ -63,7 +63,7 @@ const formatDate = (dateString) => {
   // AI消息样式
   &.ai-message {
     .message-content {
-      background-color: var(--bg-secondary); 
+      background-color: var(--bg-secondary);
     }
   }
 }

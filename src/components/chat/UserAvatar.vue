@@ -8,7 +8,7 @@ const props = defineProps({
   },
   type: {
     type: String,
-    default: 'user' // 'user' 或 'ai'
+    default: 'user' // 'login.js' 或 'ai'
   }
 });
 </script>
@@ -37,7 +37,7 @@ const props = defineProps({
   }
 
   &.user-avatar {
-    background-color: var(--bg-secondary);  
+    background-color: var(--bg-secondary);
     color: var(--text-secondary)
   }
 
