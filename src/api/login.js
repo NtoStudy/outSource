@@ -13,7 +13,7 @@ import instance from "@/api/index.js";
 export const registerApi = ({username, password, email, code}) => instance({
   url: '/user/register',
   method: 'post',
-  data: {
+  params: {
     username,
     password,
     email,
