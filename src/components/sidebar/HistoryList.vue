@@ -1,6 +1,11 @@
 <script setup>
 import {defineProps} from 'vue';
 import {mathMessageApi} from "@/api/ai.js";
+import { useRouter } from 'vue-router';
+import { useChatStore } from '@/store/chat.js';
+
+const router = useRouter();
+const chatStore = useChatStore();
 
 const props = defineProps({
   historyItems: {
@@ -8,11 +13,40 @@ const props = defineProps({
     default: () => []
   }
 });
-console.log(props.historyItems)
+
 
 const handleChatItem = async (sessionId) => {
-  const res = await mathMessageApi(sessionId)
-  console.log(res.data)
+  const res = await mathMessageApi(sessionId);
+  console.log(res.data.data);
+
+  if (res.data.data && res.data.data.length > 0) {
+    // 获取会话ID
+    const chatSessionId = res.data.data[0].sessionId;
+
+    // 将消息数据转换为MessageItem组件需要的格式
+    const formattedMessages = res.data.data.map(item => [
+      {
+        content: item.usermessage,
+        sender: 'user',
+        timestamp: new Date().toISOString(),
+        avatar: ''
+      },
+      {
+        content: item.aimessage,
+        sender: 'ai',
+        timestamp: new Date().toISOString(),
+        avatar: ''
+      }
+    ]).flat();
+
+    // 更新Pinia store
+    chatStore.setCurrentSessionId(chatSessionId);
+    chatStore.setMessages(formattedMessages);
+
+    // 导航到对应的路由
+    await router.push(`/home/${chatSessionId}`);
+  }
+
 }
 </script>
 

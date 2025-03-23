@@ -1,44 +1,16 @@
 <script setup>
-import { ref, onMounted, nextTick, watch } from 'vue';
+import {ref, onMounted, nextTick, watch} from 'vue';
 import MessageItem from './MessageItem.vue';
 import MessageInput from './MessageInput.vue';
-// 模拟消息数据
-const messages = ref([
-  {
-    content: "你好！有什么数学问题需要我帮忙解答吗？",
-    sender: "ai",
-    avatar: ""
-  },
+import {useChatStore} from "@/store/chat.js";
+import {useRoute} from "vue-router";
+import {newMathChatApi} from "@/api/ai.js";
+import router from "@/router/index.js";
 
-]);
+const route = useRoute();
+const chatStore = useChatStore();
 const messageListRef = ref(null);
-const handleSendMessage = (content) => {
-  // 添加用户消息
-  messages.value.push({
-    id: messages.value.length + 1,
-    content,
-    sender: "user",
-    timestamp: new Date().toISOString(),
-    avatar: ""
-  });
-
-  // 滚动到底部
-  scrollToBottom();
-
-  // 模拟AI回复
-  setTimeout(() => {
-    messages.value.push({
-      id: messages.value.length + 1,
-      content: "我是您的AI助手，很高兴为您服务！",
-      sender: "ai",
-      timestamp: new Date().toISOString(),
-      avatar: ""
-    });
-    // 滚动到底部
-    scrollToBottom();
-  }, 1000);
-};
-
+const messages = ref([]);
 // 滚动到底部函数
 const scrollToBottom = () => {
   nextTick(() => {
@@ -47,16 +19,76 @@ const scrollToBottom = () => {
     }
   });
 };
-
-// 监听消息变化，自动滚动到底部
-watch(messages, () => {
-  scrollToBottom();
-}, { deep: true });
+// 监听store中的消息变化
+watch(() => chatStore.messages, (newMessages) => {
+  messages.value = newMessages;
+}, {deep: true, immediate: true});
+watch(() => route.params.id, (newId) => {
+  if (newId && newId !== 'empty') {
+    chatStore.setCurrentSessionId(newId);
+  } else if (newId === 'empty') {
+    chatStore.setCurrentSessionId(null);
+    chatStore.setMessages([{
+      avatar: "",
+      content: "你好！有什么数学问题需要我帮忙解答吗？",
+      sender: "ai",
+      timestamp: new Date().toISOString(),
+    }])
+  }
+}, {immediate: true});
 
 // 组件挂载后滚动到底部
 onMounted(() => {
   scrollToBottom();
 });
+
+const handleSendMessage = async (content) => {
+
+  chatStore.addMessage({
+    content,
+    sender: 'user',
+    timestamp: new Date().toISOString(),
+    avatar: ''
+  });
+  scrollToBottom();
+  if (route.params.id === 'empty') {
+    const res = await newMathChatApi(null, content);
+    const responseData = res.data.data;
+    if (responseData && responseData.includes(':::')) {
+      const [sessionId, aiContent] = responseData.split(':::');
+
+      // 添加AI回复到store，只使用实际内容部分
+      chatStore.addMessage({
+        content: aiContent,
+        sender: 'ai',
+        timestamp: new Date().toISOString(),
+        avatar: ''
+      });
+
+      // 设置sessionId
+      if (sessionId) {
+        chatStore.setCurrentSessionId(sessionId);
+        await router.push(`/home/${sessionId}`);
+      }
+    } else {
+      // 已有会话，使用mathChatApi
+      const res = await newMathChatApi(chatStore.currentSessionId, content);
+      console.log(res.data.data)
+      if (res.data && res.data.data) {
+        // 添加AI回复到store
+        const [_, aiContent] = res.data.data.split(':::');
+        chatStore.addMessage({
+          content: aiContent,
+          sender: 'ai',
+          timestamp: new Date().toISOString(),
+          avatar: ''
+        });
+      }
+    }
+  }
+
+  scrollToBottom();
+}
 </script>
 
 <template>
@@ -64,8 +96,10 @@ onMounted(() => {
     <div class="chat-header">
       <div class="header-title">AI 助手</div>
       <div class="header-actions">
-        <el-button size="small" >
-          <el-icon><Setting /></el-icon>
+        <el-button size="small">
+          <el-icon>
+            <Setting/>
+          </el-icon>
         </el-button>
       </div>
     </div>
@@ -80,7 +114,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <MessageInput @send-message="handleSendMessage" />
+    <MessageInput @send-message="handleSendMessage"/>
   </div>
 </template>
 <style scoped lang="scss">

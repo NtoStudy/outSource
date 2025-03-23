@@ -6,14 +6,6 @@ const props = defineProps({
   message: {
     type: Object,
     required: true,
-    // 消息对象结构
-    // {
-    //   id: Number,
-    //   content: String,
-    //   sender: String, // 'ai' 或 'login.js'
-    //   timestamp: String,
-    //   avatar: String,
-    // }
   }
 });
 

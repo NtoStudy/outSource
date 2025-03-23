@@ -1,13 +1,18 @@
 <script setup>
-import { ref } from "vue";
+import {ref} from "vue";
 
 const inputContent = ref("");
+const inputBoxRef = ref(null); // 添加对输入框的引用
 const emit = defineEmits(["send-message"]);
 
 const sendMessage = () => {
   if (inputContent.value.trim()) {
     emit("send-message", inputContent.value);
     inputContent.value = "";
+    // 清空可编辑div的内容
+    if (inputBoxRef.value) {
+      inputBoxRef.value.innerText = "";
+    }
   }
 };
 
@@ -25,25 +30,27 @@ const handleKeydown = (e) => {
     <div class="input-area">
       <div class="input-wrapper">
         <div
-          class="input-box"
-          contenteditable="true"
-          @input="(e) => (inputContent = e.target.innerText)"
-          @keydown="handleKeydown"
-          placeholder="有问题，尽管问，shift+enter发送"
+            ref="inputBoxRef"
+            class="input-box"
+            contenteditable="true"
+            @input="(e) => (inputContent = e.target.innerText)"
+            @keydown="handleKeydown"
+            placeholder="有问题，尽管问，shift+enter发送"
         ></div>
 
+        <!-- 其余部分保持不变 -->
         <div class="input-actions">
           <el-tooltip content="附件" placement="top">
             <el-button circle class="attachment-button">
               <el-icon>
-                <Paperclip />
+                <Paperclip/>
               </el-icon>
             </el-button>
           </el-tooltip>
           <el-tooltip content="发送" placement="top">
             <el-button circle class="send-button" @click="sendMessage">
               <el-icon>
-                <Position />
+                <Position/>
               </el-icon>
             </el-button>
           </el-tooltip>
@@ -52,7 +59,6 @@ const handleKeydown = (e) => {
     </div>
   </div>
 </template>
-
 <style scoped lang="scss">
 @use "sass:color";
 
@@ -76,9 +82,9 @@ const handleKeydown = (e) => {
   display: flex;
   align-items: center;
   width: 100%;
-  background-color: var(--bg-tertiary); 
+  background-color: var(--bg-tertiary);
   border-radius: 18px;
-  border: 1px solid var(--border-light); 
+  border: 1px solid var(--border-light);
   padding: 8px 16px;
 }
 
@@ -101,26 +107,28 @@ const handleKeydown = (e) => {
 
   &:empty:before {
     content: attr(placeholder);
+
     &:empty:before {
       color: var(--text-secondary);
-    font-style: italic;
+      font-style: italic;
+    }
   }
-}
 
-.input-actions {
-  position: absolute;
-  right: 10px;
-  display: flex;
-  gap: 8px;
-  align-items: center;
+  .input-actions {
+    position: absolute;
+    right: 10px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
 
-  .send-button {
-    background-color: var(--primary-color);
-    color: var(--text-secondary);
-    border: none;
-    width: 32px;
-    height: 32px;
-  }
+    .send-button {
+      background-color: var(--primary-color);
+      color: var(--text-secondary);
+      border: none;
+      width: 32px;
+      height: 32px;
+    }
+
     &:hover {
       background-color: color.adjust(#4080ff, $lightness: -5%);
     }
@@ -138,7 +146,7 @@ const handleKeydown = (e) => {
     height: 32px;
 
     &:hover {
-        background-color: var(--hover-bg);
+      background-color: var(--hover-bg);
     }
 
     .el-icon {
