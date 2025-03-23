@@ -52,7 +52,7 @@ const handleSendMessage = async (content) => {
   });
   scrollToBottom();
   if (route.params.id === 'empty') {
-    const res = await newMathChatApi(null, content);
+    const res = await newMathChatApi("", content);
     const responseData = res.data.data;
     if (responseData && responseData.includes(':::')) {
       const [sessionId, aiContent] = responseData.split(':::');
@@ -70,22 +70,24 @@ const handleSendMessage = async (content) => {
         chatStore.setCurrentSessionId(sessionId);
         await router.push(`/home/${sessionId}`);
       }
-    } else {
-      // 已有会话，使用mathChatApi
-      const res = await newMathChatApi(chatStore.currentSessionId, content);
-      console.log(res.data.data)
-      if (res.data && res.data.data) {
-        // 添加AI回复到store
-        const [_, aiContent] = res.data.data.split(':::');
-        chatStore.addMessage({
-          content: aiContent,
-          sender: 'ai',
-          timestamp: new Date().toISOString(),
-          avatar: ''
-        });
-      }
     }
   }
+  else {
+    console.log(12)
+    const res = await newMathChatApi(chatStore.currentSessionId, content);
+    console.log(res.data.data)
+    if (res.data.data) {
+      // 添加AI回复到store
+
+      chatStore.addMessage({
+        content: res.data.data,
+        sender: 'ai',
+        timestamp: new Date().toISOString(),
+        avatar: ''
+      });
+    }
+  }
+
 
   scrollToBottom();
 }

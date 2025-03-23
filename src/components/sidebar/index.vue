@@ -69,6 +69,7 @@ const mathList = async ()=>{
   const res =  await mathListApi()
   if(res.data.code === 1){
     historyItems.value = res.data.data
+
   }
 }
 

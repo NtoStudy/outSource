@@ -7,7 +7,7 @@ import { useChatStore } from '@/store/chat.js';
 const router = useRouter();
 const chatStore = useChatStore();
 
-const props = defineProps({
+defineProps({
   historyItems: {
     type: Array,
     default: () => []
@@ -15,8 +15,8 @@ const props = defineProps({
 });
 
 
-const handleChatItem = async (sessionId) => {
-  const res = await mathMessageApi(sessionId);
+const handleChatItem = async (group) => {
+  const res = await mathMessageApi(group.sessionid);
   console.log(res.data.data);
 
   if (res.data.data && res.data.data.length > 0) {
@@ -58,7 +58,7 @@ const handleChatItem = async (sessionId) => {
         class="history-group"
     >
       <div class="history-item" @click="handleChatItem(group)">
-        <span>{{ group.length > 15 ? group.slice(0, 15) + '...' : group }}</span>
+        <span>{{ group.usermessage.length > 15 ? group.usermessage.slice(0, 15) + '...' : group.usermessage }}</span>
       </div>
     </div>
   </div>

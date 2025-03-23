@@ -4,7 +4,7 @@ import instance from "@/api/index.js";
  * 每次点击就是一个新的对话
  * @returns {Promise} - 包含服务器响应的Promise对象
  */
-export const newMathChatApi = (sessionId = null, message) => instance({
+export const newMathChatApi = (sessionId = "", message) => instance({
   url: '/math/chat',
   method: 'post',
   params: {
