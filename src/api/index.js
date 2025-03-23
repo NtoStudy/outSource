@@ -4,7 +4,7 @@ import {useUserInfoStore} from '@/store/user.js'
 
 const instance = axios.create({
   baseURL: 'http://192.168.43.174:8080',
-  timeout: 30000,
+  timeout: 100000,
 
 })
 

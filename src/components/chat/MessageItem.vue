@@ -12,41 +12,83 @@ const md = new MarkdownIt({
   typographer: true
 });
 
-// 自定义渲染数学公式
+// 清理文本中的所有不可见字符和零宽空格
+const cleanText = (text) => {
+  if (!text) return '';
+  // 移除零宽空格和其他不可见字符
+  return text.replace(/[\u200B-\u200D\uFEFF\u00A0]/g, '');
+};
+
+// 处理特殊字符转义
+const escapeSpecialChars = (text) => {
+  // 替换HTML实体
+  return text
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&amp;/g, '&');
+};
+
 // 自定义渲染数学公式
 const renderMath = (content) => {
+  // 清理文本
+  content = cleanText(content);
+
+  // 处理HTML实体
+  content = escapeSpecialChars(content);
+
   // 修改正则表达式，使其能够处理括号内的公式
   const inlineMathRegex = /\$(.*?)\$/g;
+  const displayMathRegex = /\\\[(.*?)\\\]/g;
 
-  // 先处理已经被$包围的公式
-  let processedContent = content.replace(inlineMathRegex, (match, formula) => {
+  // 处理行间公式 \[ ... \]
+  let processedContent = content.replace(displayMathRegex, (match, formula) => {
+    formula = cleanText(formula);
+
+    if (/[\u4e00-\u9fa5]/.test(formula)) {
+      return match;
+    }
+
     try {
       return katex.renderToString(formula, {
         throwOnError: false,
-        displayMode: false
+        displayMode: true,
+        strict: false,
+        trust: true,
+        output: 'html'
       });
     } catch (e) {
-      console.error('KaTeX 渲染错误:', e);
+      console.error('KaTeX 行间公式渲染错误:', e);
       return match;
     }
   });
 
-  // 再处理被括号包围但没有$符号的公式
-  const bracketFormulaRegex = /\((.*?\^.*?)\)/g;
-  processedContent = processedContent.replace(bracketFormulaRegex, (match, formula) => {
-    // 检查公式是否已经被渲染过（是否包含katex的HTML）
-    if (match.includes('katex')) {
+  // 处理行内公式 $ ... $
+  processedContent = processedContent.replace(inlineMathRegex, (match, formula) => {
+    formula = cleanText(formula);
+
+    if (/[\u4e00-\u9fa5]/.test(formula)) {
       return match;
     }
 
-    // 如果没有被渲染，尝试渲染它
     try {
-      return '(' + katex.renderToString(formula, {
+      // 检测是否包含复杂结构，如果包含则使用displayMode
+      const isComplexFormula = /\\left|\\right|\\frac|\\sqrt|\\sum|\\binom/.test(formula);
+
+      return katex.renderToString(formula, {
         throwOnError: false,
-        displayMode: false
-      }) + ')';
+        displayMode: isComplexFormula,
+        strict: false,
+        trust: true,
+        output: 'html',
+        macros: {
+          // 添加常用宏定义
+          "\\R": "\\mathbb{R}",
+          "\\N": "\\mathbb{N}",
+          "\\Z": "\\mathbb{Z}"
+        }
+      });
     } catch (e) {
-      console.error('括号内公式渲染错误:', e);
+      console.error('KaTeX 行内公式渲染错误:', e);
       return match;
     }
   });
@@ -62,15 +104,34 @@ const renderContent = (content) => {
   // 处理数学公式
   let processedContent = String(content);
 
-  // 处理方括号格式的公式
-  processedContent = processedContent.replace(/\[(.*?)\]/g, '$$$1$$');
+  // 清理文本
+  processedContent = cleanText(processedContent);
 
-  // 处理括号内的公式，将(a^2 + b^2 = c^2)转换为$(a^2 + b^2 = c^2)$
-  processedContent = processedContent.replace(/\((([a-z0-9]+\^[0-9]+.*?=.*?[a-z0-9]+)|([a-z0-9]+.*?=.*?[a-z0-9]+\^[0-9]+))\)/gi, '($$$1$$)');
+  // 处理HTML实体
+  processedContent = escapeSpecialChars(processedContent);
+
+  processedContent = processedContent.replace(/\\\((.*?)\\\)/g, (match, formula) => {
+    if (/[\u4e00-\u9fa5]/.test(formula)) {
+      return match;
+    }
+    return `$${formula}$`;
+  });
+
+  // 处理方括号格式的公式
+  processedContent = processedContent.replace(/\[(.*?)\]/g, (match, formula) => {
+    // 检查公式中是否包含中文字符
+    if (/[\u4e00-\u9fa5]/.test(formula)) {
+      return match; // 如果包含中文，不进行渲染
+    }
+    return `$${formula}$`;
+  });
 
   // 先渲染Markdown，再渲染数学公式
-  return renderMath(md.render(processedContent));
+  const renderedMarkdown = md.render(processedContent);
+  return renderMath(renderedMarkdown);
 };
+
+
 defineProps({
   message: {
     type: Object,
@@ -142,71 +203,6 @@ defineProps({
   display: inline-block;
   max-width: 100%;
 
-  // KaTeX相关样式
-  :deep(.katex) {
-    font-size: 1.1em;
-    line-height: 1.5;
-    display: inline-block !important;
-  }
-
-  :deep(.katex-display) {
-    overflow-x: auto;
-    max-width: 100%;
-    padding: 5px 0;
-    display: block !important;
-  }
-
-  // 修复上标问题
-  :deep(.katex .msupsub) {
-    text-align: left;
-  }
-
-  :deep(.katex .mord.mtight) {
-    vertical-align: 0.25em;
-  }
-
-  // 修复根号大小问题
-  :deep(.katex .sqrt) {
-    transform: scale(0.9);
-    display: inline-block;
-  }
-
-  :deep(.katex .sqrt>.root) {
-    margin-left: 0.1em;
-    margin-right: 0.1em;
-  }
-
-  // Markdown样式
-  :deep(p) {
-    margin: 0.5em 0;
-
-    &:first-child {
-      margin-top: 0;
-    }
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  :deep(code) {
-    background-color: var(--code-bg);
-    padding: 0.2em 0.4em;
-    border-radius: 3px;
-    font-size: 0.9em;
-  }
-
-  :deep(pre) {
-    background-color: var(--code-block-bg);
-    padding: 1em;
-    border-radius: 6px;
-    overflow-x: auto;
-
-    code {
-      background-color: transparent;
-      padding: 0;
-    }
-  }
 }
 
 // 消息操作按钮
